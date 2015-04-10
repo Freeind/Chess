@@ -1,0 +1,35 @@
+# Project: chess
+# Makefile created by Dev-C++ 5.4.0
+
+CPP      = g++.exe -D__DEBUG__
+CC       = gcc.exe -D__DEBUG__
+WINDRES  = windres.exe
+OBJ      = main.o chess.o net.o $(RES)
+LINKOBJ  = main.o chess.o net.o $(RES)
+LIBS     = -L"F:/资料/蓝桥杯/Dev-Cpp/MinGW32/lib" -static-libstdc++ -static-libgcc -mwindows F:/资料/蓝桥杯/Dev-Cpp/MinGW32/lib/libmsimg32.a F:/资料/蓝桥杯/Dev-Cpp/MinGW32/lib/libwsock32.a  -g3
+INCS     = -I"F:/资料/蓝桥杯/Dev-Cpp/MinGW32/include"
+CXXINCS  = -I"F:/资料/蓝桥杯/Dev-Cpp/MinGW32/include"
+BIN      = chess.exe
+CXXFLAGS = $(CXXINCS)  -l wsock32 -g3
+CFLAGS   = $(INCS)  -l wsock32 -g3
+RM       = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
+
+chess.o: chess.c
+	$(CC) -c chess.c -o chess.o $(CFLAGS)
+
+net.o: net.c
+	$(CC) -c net.c -o net.o $(CFLAGS)
