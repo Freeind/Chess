@@ -1,15 +1,15 @@
 #include<windows.h>
 #include<stdio.h>
 
+#define BUFFSIZE 10
+
 #define R 1 	//红方 
 #define B 2 	//黑方 
 
-#define BUFFSIZE 10
-
-#define OFF 0
-#define ON_R 1
-#define ON_B 2
-#define ON_RB 3
+#define OFF 0	//都不在线 
+#define ON_R 1	//红方在线 
+#define ON_B 2	//黑方在线 
+#define ON_RB 3	//都在线 
 
 #define TYPE 0
 #define RB 1
@@ -58,7 +58,7 @@ DWORD WINAPI threadClient0(LPVOID pM)
 		if(count == -1)
 		{
 			status = status^R;
-			shutdown(sockClient0,SD_BOTH);
+			//shutdown(sockClient0,SD_BOTH);
 			closesocket(sockClient0);
 			sockClient0 = 0;
 			sendStatus();
@@ -111,7 +111,7 @@ DWORD WINAPI threadClient1(LPVOID pM)
 		if(count == -1)
 		{
 			status = status^B;
-			shutdown(sockClient1,SD_BOTH);
+			//shutdown(sockClient1,SD_BOTH);
 			closesocket(sockClient1);
 			sockClient1 = 0;
 			sendStatus();
@@ -145,20 +145,18 @@ int main()
 {
 	WORD wVersionRequseted;    //版本请求
 	WSADATA wsaData;           //数据返回
-	int err;                   //加载版本错误信息
 	
 	char recvBuffer[BUFFSIZE];
 
-	wVersionRequseted=MAKEWORD(1,1);
-	err=WSAStartup(wVersionRequseted,&wsaData);
-    if(err!=0)
+	wVersionRequseted=MAKEWORD(2,2);
+    if(WSAStartup(wVersionRequseted,&wsaData)!=0)
 	{
-		printf("加载WinSock库失败!");
+		printf("加载WinSock库失败!\n");
 		return -1;
 	}
-	if(LOBYTE(wVersionRequseted)!=1||HIBYTE(wVersionRequseted)!=1)
+	if(LOBYTE(wVersionRequseted)!=2||HIBYTE(wVersionRequseted)!=2)
 	{
-		printf("WinSock库版本错误!");
+		printf("WinSock库版本错误!\n");
 		WSACleanup();
 		return -1;
 	}

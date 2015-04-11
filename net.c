@@ -1,4 +1,5 @@
 #include "net.h"
+//接收线程 
 DWORD WINAPI threadRead(LPVOID pM)
 {
 	int count,time;
@@ -12,13 +13,13 @@ DWORD WINAPI threadRead(LPVOID pM)
 			while(connect(sockChess,(SOCKADDR*)&addrChess,sizeof(SOCKADDR))!=0)
 			{
 				Sleep(100);
-				time++;
 				if(time>=RECONNECTTIME)
 				{
 					netflag = OFF;
 					MessageBox(NULL, "网络连接中断！","错误!",MB_ICONEXCLAMATION|MB_OK);
 					PostMessage(hwnd,WM_CLOSE,0,0);
 				}
+				time++;
 			}
 		}
 		else
@@ -42,7 +43,7 @@ DWORD WINAPI threadRead(LPVOID pM)
 				}
 				case 0x02: {
 					switch(recvBuffer[ACT]){
-						case UNDO: {
+						case UNDO_ASK: {
 							tmpflag = gameflag; 
 							gameflag = UNDO;
 							if(MessageBox(hwnd,"对方请求悔棋！\n是否同意？","提示！", MB_ICONASTERISK|MB_YESNO)==IDYES)
@@ -63,7 +64,7 @@ DWORD WINAPI threadRead(LPVOID pM)
 							gameflag = tmpflag;
 							break;
 						}
-						case TIE:{
+						case TIE_ASK:{
 							tmpflag = gameflag;
 							gameflag = TIE;
 							if(MessageBox(hwnd,"对方请求和局！\n是否同意？","提示！", MB_ICONASTERISK|MB_YESNO)==IDYES)
@@ -122,6 +123,7 @@ DWORD WINAPI threadRead(LPVOID pM)
 		}
 	}	
 }
+//初始化网络资源 
 BOOL initGameNet()
 {
 	WORD wVersionRequseted;    //版本请求
@@ -145,10 +147,15 @@ BOOL initGameNet()
 	port=3000;				//端口 
 	memset(sendBuffer,0,BUFFSIZE);
 	memset(recvBuffer,0,BUFFSIZE);
+	
+	self = 0;
+	netflag = 0;
 	return connectServer();
 }
-BOOL creatSocket()
+//连接服务器 
+BOOL connectServer()
 {
+	
 	sockChess = socket(AF_INET,SOCK_STREAM,0);
 	if(sockChess == INVALID_SOCKET)return FALSE;
 	addrChess.sin_addr.S_un.S_addr=inet_addr(ip);
@@ -165,25 +172,14 @@ BOOL creatSocket()
 		}
 		Sleep(100);
 	}
-	return TRUE;
-}
-
-BOOL connectServer()
-{
-	self = 0;
-	netflag = 0;
-	if(!creatSocket())
-	{
-		return FALSE;
-	}
 	hThread = CreateThread(NULL, 0, threadRead, NULL, 0, NULL);
 	return TRUE;
 }
+//用户数据处理 
 void sendData(int x,int y)
 {
 	if((520<=x&&x<=580)&&(470<=y&&y<=500))
 	{
-		//if(self==R&&gameflag!=R_SET||self==B&&gameflag!=B_SET)
 		if(undoflag == 0)
 		{
 			//MessageBox(hwnd, "现在不能悔棋！","提示",MB_OK);
@@ -197,7 +193,7 @@ void sendData(int x,int y)
 		//MessageBox(hwnd, "悔棋","提示",MB_OK);
 		sendBuffer[TYPE] = 0x02;
 		sendBuffer[RB] = self;
-		sendBuffer[ACT] = UNDO;
+		sendBuffer[ACT] = UNDO_ASK;
 		send(sockChess,sendBuffer,BUFFSIZE,0);
 		tmpflag = gameflag;
 		gameflag = UNDO;
@@ -205,10 +201,8 @@ void sendData(int x,int y)
 	}
 	else if((600<=x&&x<=660)&&(470<=y&&y<=500))
 	{
-		//if(gameflag!=R_SET&&gameflag!=B_SET)
 		if(tieflag ==0)
 		{
-			//MessageBox(hwnd, "游戏还没开始！","提示",MB_OK);
 			return ;
 		}
 		if(tietimes <=0)
@@ -218,7 +212,7 @@ void sendData(int x,int y)
 		//MessageBox(hwnd, "求和","提示",MB_OK);
 		sendBuffer[TYPE] = 0x02;
 		sendBuffer[RB] = self;
-		sendBuffer[ACT] = TIE;
+		sendBuffer[ACT] = TIE_ASK;
 		send(sockChess,sendBuffer,BUFFSIZE,0);
 		tmpflag = gameflag;
 		gameflag = TIE;
@@ -226,10 +220,8 @@ void sendData(int x,int y)
 	}
 	else if((680<=x&&x<=740)&&(470<=y&&y<=500))
 	{
-		//if(gameflag!=R_SET&&gameflag!=B_SET)
 		if(giveupflag == 0)
 		{
-			//MessageBox(hwnd, "游戏还没开始！","提示",MB_OK);
 			return ;
 		}
 		if(MessageBox(hwnd, "确认认输吗？","提示",MB_ICONEXCLAMATION|MB_YESNO)==IDNO)
@@ -246,8 +238,8 @@ void sendData(int x,int y)
 	}
 	else 
 	{
-		int j = (x+20)/50-1;
-		int i = (y+20)/50-1;
+		char j = (x+20)/50-1;
+		char i = (y+20)/50-1;
 		sendBuffer[TYPE] = 0x01;
 		sendBuffer[RB] = self;
 		sendBuffer[J] = j;
@@ -256,6 +248,7 @@ void sendData(int x,int y)
 		doGame(j,i,self);
 	}
 }
+//释放网络资源 
 void closeNet()
 {
 	TerminateThread(hThread,0);

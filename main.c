@@ -39,13 +39,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			DestroyWindow(hwnd);
 			break;
 		}
-		
 		/* Upon destruction, tell the main thread to stop */
 		case WM_DESTROY: {
 			PostQuitMessage(0);
 			break;
 		}
-		
 		/* All other messages (a lot of them) are processed using default procedures */
 		default:
 			return DefWindowProc(hwnd, Message, wParam, lParam);
@@ -77,8 +75,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
 	
 	/* White, COLOR_WINDOW is just a #define for a system color, try Ctrl+Clicking it */
-	//wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-	wc.hbrBackground = CreatePatternBrush(hQP);
+	//wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1); //原本白色的背景 
+	wc.hbrBackground = CreatePatternBrush(hQP);	//载入界面图片为背景 
 	wc.lpszClassName = "WindowClass"; 
 	wc.hIcon		 = LoadIcon(NULL, IDI_APPLICATION); /* Load a standard icon */
 	wc.hIconSm		 = LoadIcon(NULL, IDI_APPLICATION);
@@ -88,19 +86,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 
-	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","中国象棋    -indy",WS_VISIBLE|WS_OVERLAPPEDWINDOW&~WS_MAXIMIZEBOX&~WS_THICKFRAME,
-		CW_USEDEFAULT, /* x */
+	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,
+		"WindowClass",			//注册窗口的类名 
+		"中国象棋    -indy",	//窗口的标题 
+		WS_VISIBLE|WS_OVERLAPPEDWINDOW&~WS_MAXIMIZEBOX&~WS_THICKFRAME,	//窗口样式 
+		CW_USEDEFAULT, /* x */ 
 		CW_USEDEFAULT, /* y */
 		800, /* width */
 		600, /* height */
 		NULL,NULL,hInstance,NULL);
-		
-	/*CreateWindow("edit",NULL,WS_VISIBLE|WS_CHILD|ES_WANTRETURN|ES_NUMBER,
-		530,
-		140, 
-		200, 
-		20,
-		hwnd,NULL, hInstance,NULL);*/
 
 	if(hwnd == NULL) {
 		MessageBox(hwnd, "Window Creation Failed!","Error!",MB_ICONEXCLAMATION|MB_OK);

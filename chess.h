@@ -25,17 +25,16 @@
 #define B_P 13	//黑炮 
 #define B_B 14	//黑兵 
 
-#define BEGIN 0		//开始阶段 等待双方加入 
-#define READY 1		//准备阶段 等待双方准备 
-#define R_SET 2		//红方走棋阶段 
-#define B_SET 3		//黑方走棋阶段 
+#define BEGIN 0		//等待双方加入 
+#define READY 1		//等待双方准备 
+#define R_SET 2		//红方回合 
+#define B_SET 3		//黑方回合  
 #define R_WIN 4		//红方胜利 
 #define B_WIN 5		//黑方胜利 
 #define RB_TIE 6 	//和局 
-#define UNDO 7		//请求悔棋 
-#define TIE 8		//请求和局 
-#define GIVEUP 9	//认输 
-#define GAMEFLAG 10
+#define UNDO 7		//悔棋 
+#define TIE 8		//和局 
+#define GAMEFLAG 9
 
 #define R_CHECK 1	//红方将军 
 #define B_CHECK 2	//黑方将军 
@@ -47,30 +46,33 @@
 #define ON_RB 3		//双方都在线 
 #define NETFLAG 4
 
+#define UNDO_ASK 0	//请求悔棋 
 #define UNDO_YES 1	//同意悔棋 
 #define UNDO_NO 2 	//不同意悔棋 
-#define TIE_YES 3	//同意和局 
-#define TIE_NO 4	//不同意和局 
+#define TIE_ASK 3	//请求和局 
+#define TIE_YES 4	//同意和局 
+#define TIE_NO 5	//不同意和局 
+#define GIVEUP 6	//认输 
 
-extern HWND hwnd;
-HINSTANCE  hChess;
-HBITMAP  hQP;	//棋盘背景图片 
+extern HWND hwnd;	//窗口句柄 
+HINSTANCE  hChess;	//主程序句柄 
+HBITMAP  hQP;		//棋盘背景图片 
 HBITMAP  hRC[16];	//棋子图片 
 HBITMAP  hUI[10];	//界面图片 
-HDC hMemdc; //绘图用 
+HDC hMemdc; 		//绘图用 
 
-int self;
-int gameflag;
-int tmpflag;
-int checkflag;
-int netflag;
-int readyflag;
-int undoflag;
-int tieflag;
-int giveupflag;
-
-int undotimes;
-int tietimes;
+int self;		//我方标记 
+int gameflag;	//游戏状态标记 
+int tmpflag;	//临时游戏状态标记 
+int checkflag;	//将军标记 
+int netflag;	//网络连接标记 
+int readyflag;	//准备标记 
+int undoflag;	//悔棋显示标记 
+int tieflag;	//求和显示标记 
+int giveupflag;	//认输显示标记 
+int backflag;	//悔棋标记 
+int undotimes;	//可悔棋次数 
+int tietimes;	//可求和次数 
 
 BOOL initGameRC(HINSTANCE hInstance);
 

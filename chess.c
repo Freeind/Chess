@@ -47,14 +47,13 @@ char status[3][20] = {
 char gamestatus[GAMEFLAG][20] = {
 	{"等待双方加入..."},
 	{"等待双方准备..."},
-	{"红方移动棋子..."},
-	{"黑方移动棋子..."},
+	{"红方回合"},
+	{"黑方回合"},
 	{"红方胜利!"},
 	{"黑方胜利!"},
 	{"和局!"}, 
 	{"请求悔棋中..."},
-	{"请求和局中..."},
-	{"认输"}
+	{"请求和局中..."}
 };
 char checkstatus[CHECKFLAG][20] = {
 	{"无"}, 
@@ -68,19 +67,7 @@ char netstatus[NETFLAG][20] = {
 	{"红黑"}
 };
 
-/*HHOOK   hHook;
-LRESULT CALLBACK HookProc(int nCode,WPARAM wParam,LPARAM lParam)
-{
-	if(nCode==HCBT_ACTIVATE)   
-	{   
-		SetDlgItemText((HWND)wParam,IDOK,"&重新开始");
-		SetDlgItemText((HWND)wParam,IDCANCEL,"&退出游戏");
-		UnhookWindowsHookEx(hHook);
-	}
-	return   0;
-}*/
-
-//初始化游戏资源 
+//初始化游戏绘图资源 
 BOOL initGameRC(HINSTANCE hInstance)
 {
 	hChess = hInstance;
@@ -151,7 +138,7 @@ BOOL initGameRC(HINSTANCE hInstance)
 	gameflag = BEGIN;
 	return TRUE;
 }
-
+//释放绘图资源 
 void closeRC()
 {
 	DeleteObject(hQP);
@@ -191,13 +178,14 @@ void initMove(){
 	set_j = -1;
 	memset(move,0,sizeof(move));
 }
+//初始化棋盘 
 void initMap(){
 	checkflag = 0;
 	undoflag = 0;
 	tieflag = 0;
 	giveupflag = 0;
-	undotimes = 0;
-	tietimes = 3; 
+	undotimes = -1;
+	tietimes = 3;
 	memcpy(map,basemap,sizeof(map));
 	memcpy(oldmap_r,basemap,sizeof(map));
 	memcpy(oldmap_b,basemap,sizeof(map));
@@ -214,6 +202,7 @@ void loadMap(){
 	set_j = check_j;
 	memcpy(map,checkmap,sizeof(map));
 }
+//保存悔棋棋盘 
 void setOldMap(int rb)
 {
 	if(rb == R)
@@ -221,15 +210,23 @@ void setOldMap(int rb)
 	else if(rb ==B)
 		memcpy(oldmap_b,map,sizeof(map));
 	if(rb==self)
+	{
+		backflag = 1;
+		if(undotimes == -1)
 		undotimes = 3;
+	}
 }
+//还原悔棋棋盘 
 void getOldMap(int rb)
 {
 	if(rb == R)
 		memcpy(map,oldmap_r,sizeof(map));
 	else if(rb ==B)
-		memcpy(map,oldmap_b,sizeof(map));	
+		memcpy(map,oldmap_b,sizeof(map));
+	if(rb == self)
+	backflag = 0;
 }
+//悔棋 
 void backGame(int rb)
 {
 	getOldMap(rb);
@@ -1336,37 +1333,38 @@ void setAct()
 		tieflag = 0;
 		giveupflag = 0;
 	}
+	if(backflag == 0)
+	{
+		undoflag = 0;
+	}
 }
-//绘制棋子 
+//绘制棋盘 
 void drawChessman(HDC hdc)
 {
 	int i,j;
 	hMemdc=CreateCompatibleDC(hdc);
+	//绘制棋子 
 	for(i=0;i<=MAX_Y;i++){
 		for(j=0;j<=MAX_X;j++){
 			if(map[i][j]!=0){
-				//hMemdc=CreateCompatibleDC(hdc);
 				SelectObject(hMemdc,hRC[map[i][j]]);
 				TransparentBlt(hdc,getX(j),getY(i),50,50,hMemdc,0,0,50,50,RGB(255,0,255));
-				//DeleteDC(hMemdc);
 			}
 		}
 	}
+	//绘制棋子移动路径
 	for(i=0;i<=MAX_Y;i++){
 		for(j=0;j<=MAX_X;j++){
 			if(move[i][j]!=0){
-				//hMemdc=CreateCompatibleDC(hdc);
 				SelectObject(hMemdc,hRC[15]);
 				BitBlt(hdc,getX(j),getY(i),50,50,hMemdc,0,0,SRCAND);
-				//DeleteDC(hMemdc);
 			}
 		}
 	}
+	//绘制选择标记 
 	if(set_i>=0&&set_j>=0){
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hRC[0]);
 		TransparentBlt(hdc,getX(set_j),getY(set_i),50,50,hMemdc,0,0,50,50,RGB(255,255,255));
-		//DeleteDC(hMemdc);
 	}
 	DeleteDC(hMemdc);
 }
@@ -1413,63 +1411,47 @@ void drawStatus(HDC hdc)
 	hMemdc=CreateCompatibleDC(hdc);
 	if(netflag&R)
 	{
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hUI[1]);
 		BitBlt(hdc,640,90,80,80,hMemdc,0,0,SRCCOPY);
-		//DeleteDC(hMemdc);
 	}
 	if(netflag&B)
 	{
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hUI[2]);
 		BitBlt(hdc,640,340,80,80,hMemdc,0,0,SRCCOPY);
-		//DeleteDC(hMemdc);
 	}
 	if(self == R)
 	{
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hUI[3]);
 		TransparentBlt(hdc,550,90,80,40,hMemdc,0,0,80,40,RGB(255,255,255));
 		SelectObject(hMemdc,hUI[4]);
 		TransparentBlt(hdc,550,340,80,40,hMemdc,0,0,80,40,RGB(255,255,255));
-		//DeleteDC(hMemdc);
 	}
 	else
 	{
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hUI[4]);
 		TransparentBlt(hdc,550,90,80,40,hMemdc,0,0,80,40,RGB(255,255,255));
 		SelectObject(hMemdc,hUI[3]);
 		TransparentBlt(hdc,550,340,80,40,hMemdc,0,0,80,40,RGB(255,255,255));
-		//DeleteDC(hMemdc);
 	}
 	if(readyflag&R)
 	{
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hUI[5]);
 		TransparentBlt(hdc,550,130,80,40,hMemdc,0,0,80,40,RGB(255,255,255));
-		//DeleteDC(hMemdc);
 	}
 	if(readyflag&B)
 	{
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hUI[5]);
 		TransparentBlt(hdc,550,380,80,40,hMemdc,0,0,80,40,RGB(255,255,255));
-		//DeleteDC(hMemdc);
 	}
 	if(gameflag == R_SET)
 	{
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hUI[0]);
 		TransparentBlt(hdc,500,90,20,80,hMemdc,0,0,20,80,RGB(255,255,255));
-		//DeleteDC(hMemdc);
 	}
 	else if(gameflag == B_SET)
 	{
-		//hMemdc=CreateCompatibleDC(hdc);
 		SelectObject(hMemdc,hUI[0]);
 		TransparentBlt(hdc,500,340,20,80,hMemdc,0,0,20,80,RGB(255,255,255));
-		//DeleteDC(hMemdc);
 	}
 	if(checkflag != 0)
 	{
@@ -1477,19 +1459,16 @@ void drawStatus(HDC hdc)
 		TransparentBlt(hdc,155,230,200,100,hMemdc,0,0,200,100,RGB(255,255,255));
 		checkflag = 0;
 	}
-	//if(undoflag != 0&&(self==R&&gameflag==R_SET||self==B&&gameflag==B_SET))
-	if(undoflag != 0&&undotimes != 0)
+	if(undoflag != 0&&undotimes > 0)
 	{
 		SelectObject(hMemdc,hUI[7]);
 		BitBlt(hdc,520,470,60,30,hMemdc,0,0,SRCCOPY);
 	}
-	//if(tieflag != 0&&(gameflag==R_SET||gameflag==B_SET))
-	if(tieflag != 0&&tietimes != 0)
+	if(tieflag != 0&&tietimes > 0)
 	{
 		SelectObject(hMemdc,hUI[8]);
 		BitBlt(hdc,600,470,60,30,hMemdc,0,0,SRCCOPY);
 	}
-	//if(giveupflag != 0&&((gameflag==R_SET||gameflag==B_SET)))
 	if(giveupflag != 0)
 	{
 		SelectObject(hMemdc,hUI[9]);
@@ -1500,9 +1479,6 @@ void drawStatus(HDC hdc)
 	{
 		gameflag = READY;
 		readyflag = OFF;
-		/*hHook=SetWindowsHookEx(WH_CBT,(HOOKPROC)HookProc,0,GetCurrentThreadId());
-		if(MessageBox(hwnd,"红方胜利！","游戏结束！", MB_ICONASTERISK|MB_OK)!=IDOK)
-			PostMessage(hwnd,WM_CLOSE,0,0);*/
 		MessageBox(hwnd,"红方胜利！","游戏结束！", MB_ICONASTERISK|MB_OK);
 		PostMessage(hwnd,WM_LBUTTONDOWN,0,0);
 	}
@@ -1510,9 +1486,6 @@ void drawStatus(HDC hdc)
 	{
 		gameflag = READY;
 		readyflag = OFF;
-		/*hHook=SetWindowsHookEx(WH_CBT,(HOOKPROC)HookProc,0,GetCurrentThreadId());
-		if(MessageBox(hwnd,"黑方胜利！","游戏结束！", MB_ICONASTERISK|MB_OK)!=IDOK)
-			PostMessage(hwnd,WM_CLOSE,0,0);*/
 		MessageBox(hwnd,"黑方胜利！","游戏结束！", MB_ICONASTERISK|MB_OK);
 		PostMessage(hwnd,WM_LBUTTONDOWN,0,0);
 	}

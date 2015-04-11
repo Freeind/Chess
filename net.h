@@ -24,6 +24,9 @@ char recvBuffer[BUFFSIZE];
 char sendBuffer[BUFFSIZE];
 
 BOOL initGameNet();
+
 void sendData(int x,int y);
+
+void closeNet(); 
 
 #endif
