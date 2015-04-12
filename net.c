@@ -182,12 +182,10 @@ void sendData(int x,int y)
 	{
 		if(undoflag == 0)
 		{
-			//MessageBox(hwnd, "现在不能悔棋！","提示",MB_OK);
 			return ;
 		}
 		if(undotimes <= 0)
 		{
-			//MessageBox(hwnd, "不能悔棋！","提示",MB_OK);
 			return ;
 		}
 		//MessageBox(hwnd, "悔棋","提示",MB_OK);

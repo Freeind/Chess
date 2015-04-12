@@ -32,8 +32,8 @@
 #define R_WIN 4		//红方胜利 
 #define B_WIN 5		//黑方胜利 
 #define RB_TIE 6 	//和局 
-#define UNDO 7		//悔棋 
-#define TIE 8		//和局 
+#define UNDO 7		//悔棋
+#define TIE 8		//求和
 #define GAMEFLAG 9
 
 #define R_CHECK 1	//红方将军 
@@ -65,7 +65,7 @@ int self;		//我方标记
 int gameflag;	//游戏状态标记 
 int tmpflag;	//临时游戏状态标记 
 int checkflag;	//将军标记 
-int netflag;	//网络连接标记 
+int netflag;	//网络标记 
 int readyflag;	//准备标记 
 int undoflag;	//悔棋显示标记 
 int tieflag;	//求和显示标记 

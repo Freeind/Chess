@@ -1,5 +1,5 @@
 #include "chess.h"
-//#define DEBUG
+#define DEBUG
 
 #ifndef DEBUG
 int basemap[10][9] = {
@@ -16,16 +16,16 @@ int basemap[10][9] = {
 };
 #else
 int basemap[10][9] = {
-	{ 0, 0, 0, 2, 0, 1, 0, 0, 0},
+	{ 0, 0, 0, 2, 1, 0, 0, 0, 0},
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{ 0, 6, 4, 0, 0, 0, 0, 0, 0},
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{ 0, 0, 0, 13, 0, 0, 0, 0, 0},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0,12, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0,0, 12, 0, 0, 0, 0},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 9, 8, 9, 0, 0, 0}
+	{ 0, 0, 0, 8, 0, 0, 0, 0, 0}
 };
 #endif
 
@@ -267,31 +267,23 @@ void moveJ(int i,int j,int rb)
 	if(rb==R)
 	{
 		if(((i+1)<=2)&&(!isR(i+1,j)))
-			//move[i+1][j] = R_J;
 			setMove(i+1,j,R_J,B);
 		if(((i-1)>=0)&&(!isR(i-1,j)))
-			//move[i-1][j] = R_J;
 			setMove(i-1,j,R_J,B);
 		if(((j+1)<=5)&&(!isR(i,j+1)))
-			//move[i][j+1] = R_J;
 			setMove(i,j+1,R_J,B);
 		if(((j-1)>=3)&&(!isR(i,j-1)))
-			//move[i][j-1] = R_J;
 			setMove(i,j-1,R_J,B);
 	}
 	if(rb==B)
 	{
 		if(((i+1)<=9)&&(!isB(i+1,j)))
-			//move[i+1][j] = B_J;
 			setMove(i+1,j,B_J,R);
 		if(((i-1)>=7)&&(!isB(i-1,j)))
-			//move[i-1][j] = B_J;
 			setMove(i-1,j,B_J,R);
 		if(((j+1)<=5)&&(!isB(i,j+1)))
-			//move[i][j+1] = B_J;
 			setMove(i,j+1,B_J,R);
 		if(((j-1)>=3)&&(!isB(i,j-1)))
-			//move[i][j-1] = B_J;
 			setMove(i,j-1,B_J,R);
 	}
 }
@@ -303,22 +295,17 @@ void moveS(int i,int j,int rb)
 		if(i!=1)
 		{
 			if(!isR(1,4))
-				//move[1][4] = R_S;
 				setMove(1,4,R_S,B);
 		} 
 		else 
 		{
 			if(!isR(0,3))
-				//move[0][3] = R_S;
 				setMove(0,3,R_S,B);
 			if(!isR(0,5))
-				//move[0][5] = R_S;
 				setMove(0,5,R_S,B);
 			if(!isR(2,3))
-				//move[2][3] = R_S;
 				setMove(2,3,R_S,B);
 			if(!isR(2,5))
-				//move[2][5] = R_S;
 				setMove(2,5,R_S,B);
 		}
 	}
@@ -327,22 +314,17 @@ void moveS(int i,int j,int rb)
 		if(i!=8)
 		{
 			if(!isB(8,4))
-				//move[8][4] = B_S;
 				setMove(8,4,B_S,R);
 		} 
 		else 
 		{
 			if(!isB(7,3))
-				//move[7][3] = B_S;
 				setMove(7,3,B_S,R);
 			if(!isB(7,5))
-				//move[7][5] = B_S;
 				setMove(7,5,B_S,R);
 			if(!isB(9,3))
-				//move[9][3] = B_S;
 				setMove(9,3,B_S,R);
 			if(!isB(9,5))
-				//move[9][5] = B_S;
 				setMove(9,5,B_S,R);
 		}
 	}
@@ -354,25 +336,21 @@ void moveX(int i,int j,int rb){
 		if((i+2)<=4&&(j+2)<=8)
 		{
 			if(map[i+1][j+1]==0&&!isR(i+2,j+2))
-				//move[i+2][j+2] = R_X;
 				setMove(i+2,j+2,R_X,B);
 		}
 		if((i+2)<=4&&(j-2)>=0)
 		{
 			if(map[i+1][j-1]==0&&!isR(i+2,j-2))
-				//move[i+2][j-2] = R_X;
 				setMove(i+2,j-2,R_X,B);
 		}
 		if((i-2)>=0&&(j+2)<=8)
 		{
 			if(map[i-1][j+1]==0&&!isR(i-2,j+2))
-				//move[i-2][j+2] = R_X;
 				setMove(i-2,j+2,R_X,B);
 		}
 		if((i-2)>=0&&(j-2)>=0)
 		{
 			if(map[i-1][j-1]==0&&!isR(i-2,j-2))
-				//move[i-2][j-2] = R_X;
 				setMove(i-2,j-2,R_X,B);
 		}
 	}
@@ -381,25 +359,21 @@ void moveX(int i,int j,int rb){
 		if((i+2)<=9&&(j+2)<=8)
 		{
 			if(map[i+1][j+1]==0&&!isB(i+2,j+2))
-				//move[i+2][j+2] = B_X;
 				setMove(i+2,j+2,B_X,R);
 		}
 		if((i+2)<=9&&(j-2)>=0)
 		{
 			if(map[i+1][j-1]==0&&!isB(i+2,j-2))
-				//move[i+2][j-2] = B_X;
 				setMove(i+2,j-2,B_X,R);
 		}
 		if((i-2)>=5&&(j+2)<=8)
 		{
 			if(map[i-1][j+1]==0&&!isB(i-2,j+2))
-				//move[i-2][j+2] = B_X;
 				setMove(i-2,j+2,B_X,R);
 		}
 		if((i-2)>=5&&(j-2)>=0)
 		{
 			if(map[i-1][j-1]==0&&!isB(i-2,j-2))
-				//move[i-2][j-2] = B_X;
 				setMove(i-2,j-2,B_X,R);
 		}
 	}
@@ -411,37 +385,29 @@ void moveM(int i,int j,int rb) {
 		if(map[(i+1)%10][j]==0)
 		{
 			if((i+2)<=9&&(j+1)<=8&&!isR(i+2,j+1))
-				//move[i+2][j+1] = R_M;
 				setMove(i+2,j+1,R_M,B);
 			if((i+2)<=9&&(j-1)>=0&&!isR(i+2,j-1))
-				//move[i+2][j-1] = R_M;
 				setMove(i+2,j-1,R_M,B);
 		}
 		if(map[(i-1)%10][j]==0)
 		{
 			if((i-2)>=0&&(j+1)<=8&&!isR(i-2,j+1))
-				//move[i-2][j+1] = R_M;
 				setMove(i-2,j+1,R_M,B);
 			if((i-2)>=0&&(j-1)>=0&&!isR(i-2,j-1))
-				//move[i-2][j-1] = R_M;
 				setMove(i-2,j-1,R_M,B);
 		}
 		if(map[i][(j+1)%10]==0)
 		{
 			if((i+1)<=9&&(j+2)<=8&&!isR(i+1,j+2))
-				//move[i+1][j+2] = R_M;
 				setMove(i+1,j+2,R_M,B);
 			if((i-1)>=0&&(j+2)<=8&&!isR(i-1,j+2))
-				//move[i-1][j+2] = R_M;
 				setMove(i-1,j+2,R_M,B);
 		}
 		if(map[i][(j-1)%10]==0)
 		{
 			if((i+1)<=9&&(j-2)>=0&&!isR(i+1,j-2))
-				//move[i+1][j-2] = R_M;
 				setMove(i+1,j-2,R_M,B);
 			if((i-1)>=0&&(j-2)>=0&&!isR(i-1,j-2))
-				//move[i-1][j-2] = R_M;
 				setMove(i-1,j-2,R_M,B);
 		}
 	}
@@ -450,37 +416,29 @@ void moveM(int i,int j,int rb) {
 		if(map[(i+1)%10][j]==0)
 		{
 			if((i+2)<=9&&(j+1)<=8&&!isB(i+2,j+1))
-				//move[i+2][j+1] = B_M;
 				setMove(i+2,j+1,B_M,R);
 			if((i+2)<=9&&(j-1)>=0&&!isB(i+2,j-1))
-				//move[i+2][j-1] = B_M;
 				setMove(i+2,j-1,B_M,R);
 		}
 		if(map[(i-1)%10][j]==0)
 		{
 			if((i-2)>=0&&(j+1)<=8&&!isB(i-2,j+1))
-				//move[i-2][j+1] = B_M;
 				setMove(i-2,j+1,B_M,R);
 			if((i-2)>=0&&(j-1)>=0&&!isB(i-2,j-1))
-				//move[i-2][j-1] = B_M;
 				setMove(i-2,j-1,B_M,R);
 		}
 		if(map[i][(j+1)%10]==0)
 		{
 			if((i+1)<=9&&(j+2)<=8&&!isB(i+1,j+2))
-				//move[i+1][j+2] = B_M;
 				setMove(i+1,j+2,B_M,R);
 			if((i-1)>=0&&(j+2)<=8&&!isB(i-1,j+2))
-				//move[i-1][j+2] = B_M;
 				setMove(i-1,j+2,B_M,R);
 		}
 		if(map[i][(j-1)%10]==0)
 		{
 			if((i+1)<=9&&(j-2)>=0&&!isB(i+1,j-2))
-				//move[i+1][j-2] = B_M;
 				setMove(i+1,j-2,B_M,R);
 			if((i-1)>=0&&(j-2)>=0&&!isB(i-1,j-2))
-				//move[i-1][j-2] = B_M;
 				setMove(i-1,j-2,B_M,R);
 		}
 	}
@@ -494,7 +452,6 @@ void moveC(int i,int j,int rb) {
 		c_j = j;
 		while(c_i<=9&&!isR(c_i,c_j))
 		{
-			//move[c_i][c_j] = R_C;
 			setMove(c_i,c_j,R_C,B);
 			if(isB(c_i,c_j))
 				break;
@@ -504,7 +461,6 @@ void moveC(int i,int j,int rb) {
 		c_j = j;
 		while(c_i>=0&&!isR(c_i,c_j))
 		{
-			//move[c_i][c_j] = R_C;
 			setMove(c_i,c_j,R_C,B);
 			if(isB(c_i,c_j))
 				break;
@@ -514,7 +470,6 @@ void moveC(int i,int j,int rb) {
 		c_j = j+1;
 		while(c_j<=8&&!isR(c_i,c_j))
 		{
-			//move[c_i][c_j] = R_C;
 			setMove(c_i,c_j,R_C,B);
 			if(isB(c_i,c_j))
 				break;
@@ -524,7 +479,6 @@ void moveC(int i,int j,int rb) {
 		c_j = j-1;
 		while(c_j>=0&&!isR(c_i,c_j))
 		{
-			//move[c_i][c_j] = R_C;
 			setMove(c_i,c_j,R_C,B);
 			if(isB(c_i,c_j))
 				break;
@@ -537,7 +491,6 @@ void moveC(int i,int j,int rb) {
 		c_j = j;
 		while(c_i<=9&&!isB(c_i,c_j))
 		{
-			//move[c_i][c_j] = B_C;
 			setMove(c_i,c_j,B_C,R);
 			if(isR(c_i,c_j))
 				break;
@@ -547,7 +500,6 @@ void moveC(int i,int j,int rb) {
 		c_j = j;
 		while(c_i>=0&&!isB(c_i,c_j))
 		{
-			//move[c_i][c_j] = B_C;
 			setMove(c_i,c_j,B_C,R);
 			if(isR(c_i,c_j))
 				break;
@@ -557,7 +509,6 @@ void moveC(int i,int j,int rb) {
 		c_j = j+1;
 		while(c_j<=8&&!isB(c_i,c_j))
 		{
-			//move[c_i][c_j] = B_C;
 			setMove(c_i,c_j,B_C,R);
 			if(isR(c_i,c_j))
 				break;
@@ -567,7 +518,6 @@ void moveC(int i,int j,int rb) {
 		c_j = j-1;
 		while(c_j>=0&&!isB(c_i,c_j))
 		{
-			//move[c_i][c_j] = B_C;
 			setMove(c_i,c_j,B_C,R);
 			if(isR(c_i,c_j))
 				break;
@@ -584,7 +534,6 @@ void moveP(int i,int j,int rb) {
 		p_j = j;
 		while(p_i<=9&&!map[p_i][p_j])
 		{
-			//move[p_i][p_j] = R_P;
 			setMove(p_i,p_j,R_P,B);
 			p_i++;
 		}
@@ -593,7 +542,6 @@ void moveP(int i,int j,int rb) {
 		{
 			if(isB(p_i,p_j))
 			{
-				//move[p_i][p_j] = R_P;
 				setMove(p_i,p_j,R_P,B);
 				break;
 			}
@@ -603,7 +551,6 @@ void moveP(int i,int j,int rb) {
 		p_j = j;
 		while(p_i>=0&&!map[p_i][p_j])
 		{
-			//move[p_i][p_j] = R_P;
 			setMove(p_i,p_j,R_P,B);
 			p_i--;
 		}
@@ -612,7 +559,6 @@ void moveP(int i,int j,int rb) {
 		{
 			if(isB(p_i,p_j))
 			{
-				//move[p_i][p_j] = R_P;
 				setMove(p_i,p_j,R_P,B);
 				break;
 			}
@@ -622,7 +568,6 @@ void moveP(int i,int j,int rb) {
 		p_j = j+1;
 		while(p_j<=8&&!map[p_i][p_j])
 		{
-			//move[p_i][p_j] = R_P;
 			setMove(p_i,p_j,R_P,B);
 			p_j++;
 		}
@@ -631,7 +576,6 @@ void moveP(int i,int j,int rb) {
 		{
 			if(isB(p_i,p_j))
 			{
-				//move[p_i][p_j] = R_P;
 				setMove(p_i,p_j,R_P,B);
 				break;
 			}
@@ -641,7 +585,6 @@ void moveP(int i,int j,int rb) {
 		p_j = j-1;
 		while(p_j>=0&&!map[p_i][p_j])
 		{
-			//move[p_i][p_j] = R_P;
 			setMove(p_i,p_j,R_P,B);
 			p_j--;
 		}
@@ -650,7 +593,6 @@ void moveP(int i,int j,int rb) {
 		{
 			if(isB(p_i,p_j))
 			{
-				//move[p_i][p_j] = R_P;
 				setMove(p_i,p_j,R_P,B);
 				break;
 			}
@@ -663,7 +605,6 @@ void moveP(int i,int j,int rb) {
 		p_j = j;
 		while(p_i<=9&&!map[p_i][p_j])
 		{
-			//move[p_i][p_j] = B_P;
 			setMove(p_i,p_j,B_P,R);
 			p_i++;
 		}
@@ -672,7 +613,6 @@ void moveP(int i,int j,int rb) {
 		{
 			if(isR(p_i,p_j))
 			{
-				//move[p_i][p_j] = B_P;
 				setMove(p_i,p_j,B_P,R);
 				break;
 			}
@@ -682,7 +622,6 @@ void moveP(int i,int j,int rb) {
 		p_j = j;
 		while(p_i>=0&&!map[p_i][p_j])
 		{
-			//move[p_i][p_j] = B_P;
 			setMove(p_i,p_j,B_P,R);
 			p_i--;
 		}
@@ -691,7 +630,6 @@ void moveP(int i,int j,int rb) {
 		{
 			if(isR(p_i,p_j))
 			{
-				//move[p_i][p_j] = B_P;
 				setMove(p_i,p_j,B_P,R);
 				break;
 			}
@@ -701,7 +639,6 @@ void moveP(int i,int j,int rb) {
 		p_j = j+1;
 		while(p_j<=8&&!map[p_i][p_j])
 		{
-			//move[p_i][p_j] = B_P;
 			setMove(p_i,p_j,B_P,R);
 			p_j++;
 		}
@@ -710,7 +647,6 @@ void moveP(int i,int j,int rb) {
 		{
 			if(isR(p_i,p_j))
 			{
-				//move[p_i][p_j] = B_P;
 				setMove(p_i,p_j,B_P,R);
 				break;
 			}
@@ -720,7 +656,6 @@ void moveP(int i,int j,int rb) {
 		p_j = j-1;
 		while(p_j>=0&&!map[p_i][p_j])
 		{
-			//move[p_i][p_j] = B_P;
 			setMove(p_i,p_j,B_P,R);
 			p_j--;
 		}
@@ -729,7 +664,6 @@ void moveP(int i,int j,int rb) {
 		{
 			if(isR(p_i,p_j))
 			{
-				//move[p_i][p_j] = B_P;
 				setMove(p_i,p_j,B_P,R);
 				break;
 			}
@@ -744,18 +678,14 @@ void moveB(int i,int j,int rb) {
 		if(i<=4)
 		{
 			if(((i+1)<=9)&&(!isR(i+1,j)))
-				//move[i+1][j] = R_B;
 				setMove(i+1,j,R_B,B);
 		}
 		else {
 			if(((i+1)<=9)&&(!isR(i+1,j)))
-				//move[i+1][j] = R_B;
 				setMove(i+1,j,R_B,B);
 			if(((j+1)<=8)&&(!isR(i,j+1)))
-				//move[i][j+1] = R_B;
 				setMove(i,j+1,R_B,B);
 			if(((j-1)>=0)&&(!isR(i,j-1)))
-				//move[i][j-1] = R_B;
 				setMove(i,j-1,R_B,B);
 		}
 	}
@@ -764,18 +694,14 @@ void moveB(int i,int j,int rb) {
 		if(i>=5)
 		{
 			if(((i-1)>=0)&&(!isB(i-1,j)))
-				//move[i-1][j] = B_B;
 				setMove(i-1,j,B_B,R);
 		}
 		else {
 			if(((i-1)>=0)&&(!isB(i-1,j)))
-				//move[i-1][j] = B_B;
 				setMove(i-1,j,B_B,R);
 			if(((j+1)<=8)&&(!isB(i,j+1)))
-				//move[i][j+1] = B_B;
 				setMove(i,j+1,B_B,R);
 			if(((j-1)>=0)&&(!isB(i,j-1)))
-				//move[i][j-1] = B_B;
 				setMove(i,j-1,B_B,R);
 		}
 	}
@@ -843,56 +769,6 @@ void getMove(i,j){
 	}
 }
 //判断是否将军 
-/*int isCheck(int rb){
-	int i,j,rj_i,rj_j,bj_i,bj_j;
-	initMove(); 
-	if(rb==R)
-	{ 
-		for(i=0;i<=MAX_Y;i++){
-			for(j=0;j<=MAX_X;j++){
-				if(isR(i,j)){		//获取本方所有棋子可以走的位置 
-					getMove(i,j);
-				}
-				if(map[i][j]==R_J){		//标记帅的位置 
-					rj_i = i;
-					rj_j = j;
-				}
-				if(map[i][j]==B_J){		//标记将的位置 
-					bj_i = i;
-					bj_j = j;
-				}
-			}
-		}
-		if(move[bj_i][bj_j]!=0||rj_j==bj_j)
-			return R_CHECK;
-		else{
-			return 0;
-		} 
-			
-	}
-	if(rb==B)
-	{ 
-		for(i=0;i<=MAX_Y;i++){
-			for(j=0;j<=MAX_X;j++){
-				if(isB(i,j)){		//获取本方所有棋子可以走的位置 
-					getMove(i,j);
-				}
-				if(map[i][j]==R_J){		//标记帅的位置 
-					rj_i = i;
-					rj_j = j;
-				}
-				if(map[i][j]==B_J){		//标记将的位置 
-					bj_i = i;
-					bj_j = j;
-				}
-			}
-		}
-		if(move[rj_i][rj_j]!=0||rj_j==bj_j)
-			return B_CHECK;
-		else
-			return 0;
-	}
-}*/
 int isCheck(int rb){
 	int i,j,j_i,j_j;
 	if(rb==R)
@@ -1184,12 +1060,10 @@ int isCheck(int rb){
 		return 0;
 	}
 }
-
+//判断将死 
 int isCheckmate(int rb)
 {
 	int i,j,checkmate_i,checkmate_j;
-	//checkmate_i = set_i;
-	//checkmate_j = set_j;
 	initMove();
 	if(rb==R)
 	{ 
@@ -1205,14 +1079,10 @@ int isCheckmate(int rb)
 		for(i=0;i<=MAX_Y;i++){
 			for(j=0;j<=MAX_X;j++){
 				if(move[i][j]!=0){ 
-					//set_i = checkmate_i;
-					//set_j = checkmate_j;
 					return B_SET;
 				}
 			}
 		}
-		//set_i = checkmate_i;
-		//set_j = checkmate_j;
 		return  R_WIN; 
 	}
 	if(rb==B)
@@ -1229,14 +1099,10 @@ int isCheckmate(int rb)
 		for(i=0;i<=MAX_Y;i++){
 			for(j=0;j<=MAX_X;j++){
 				if(move[i][j]!=0){ 
-					//set_i = checkmate_i;
-					//set_j = checkmate_j;
 					return R_SET; 
 				}
 			}
 		}
-		//set_i = checkmate_i;
-		//set_j = checkmate_j;
 		return  B_WIN; 
 	}
 }
@@ -1265,26 +1131,26 @@ void doGame(int j,int i,int rb){
 			break;
 		} 
 		case R_SET : {
-			//checkflag = isCheck(B);
-			if(rb!=R)break;
+			if(rb!=R)break;		//判断操作方是否是我方
+			//判断点击位置是否是我方棋子
 			if(0<=i&&i<=9&&0<=j&&j<=8&&isR(i,j))
 			{
-				selCM(i,j);
-				getMove(i,j);
+				selCM(i,j);		//根据点击坐标置set_i、set_j
+				getMove(i,j);	//根据点击坐等置move
 			}
 			else
+				//判断点击位置算法存在路径
 				if(0<=i&&i<=9&&0<=j&&j<=8&&move[i][j]!=0)
 				{
-					setOldMap(R);
-					setCM(i,j);
-					gameflag = isCheckmate(R);
-					initMove();
-					checkflag = isCheck(B);
+					setOldMap(R);	//保存棋盘以便悔棋操作
+					setCM(i,j);		//移动棋子完成走子
+					checkflag = isCheck(R);		//判断将军
+					gameflag = isCheckmate(R);	//判断将死
+					initMove();		//清理set_i、set_j和move
 				}
 			break;
 		}
 		case B_SET : {
-			//checkflag = isCheck(R);
 			if(rb!=B)break;
 			if(0<=i&&i<=9&&0<=j&&j<=8&&isB(i,j))
 			{
@@ -1295,10 +1161,10 @@ void doGame(int j,int i,int rb){
 				if(0<=i&&i<=9&&0<=j&&j<=8&&move[i][j]!=0)
 				{
 					setOldMap(B);
-					setCM(i,j);	
+					setCM(i,j);
+					checkflag = isCheck(B);
 					gameflag = isCheckmate(B);
 					initMove();
-					checkflag = isCheck(B);
 				}
 			break;
 		}  

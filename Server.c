@@ -145,8 +145,6 @@ int main()
 {
 	WORD wVersionRequseted;    //版本请求
 	WSADATA wsaData;           //数据返回
-	
-	char recvBuffer[BUFFSIZE];
 
 	wVersionRequseted=MAKEWORD(2,2);
     if(WSAStartup(wVersionRequseted,&wsaData)!=0)
@@ -165,7 +163,7 @@ int main()
 	memset(&addrClient0,0,sizeof(SOCKADDR_IN));
 	memset(&addrClient1,0,sizeof(SOCKADDR_IN));
 	addrServer.sin_addr.S_un.S_addr=htonl(INADDR_ANY);
-    addrServer.sin_family=AF_INET;
+	addrServer.sin_family=AF_INET;
 	addrServer.sin_port=htons(3000);
 	length0=sizeof(SOCKADDR);
 	length1=sizeof(SOCKADDR);
