@@ -1,5 +1,5 @@
 #include "chess.h"
-#define DEBUG
+//#define DEBUG
 
 #ifndef DEBUG
 int basemap[10][9] = {
@@ -16,16 +16,16 @@ int basemap[10][9] = {
 };
 #else
 int basemap[10][9] = {
-	{ 0, 0, 0, 2, 1, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 6, 4, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 13, 0, 0, 0, 0, 0},
+	{ 0, 0, 0, 0, 1, 0, 0, 0, 0},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{ 0, 0, 7, 0, 0, 0, 0, 0, 0},
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{ 0, 6, 0, 0, 0, 0, 0, 0, 0},
+	{ 0, 0,13, 0, 0, 0, 0, 0, 0},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 8, 0, 0, 0, 0, 0}
+	{ 0, 0, 0, 0, 0, 8, 0, 0, 0}
 };
 #endif
 
@@ -1251,7 +1251,7 @@ void drawStatus(HDC hdc)
 	setAct();
 	
 	HFONT hFont = CreateFont(
-		24,
+		20,
         0,
         0,
         0,
@@ -1271,7 +1271,7 @@ void drawStatus(HDC hdc)
 	//SetTextColor(hdc,RGB(0,0,255)); 
 	//SetBkColor(hdc,RGB(0,0,0));
 	SetBkMode(hdc,TRANSPARENT);
-	TextOut(hdc,560,510,gamestatus[gameflag],strlen(gamestatus[gameflag]));
+	TextOut(hdc,560,520,gamestatus[gameflag],strlen(gamestatus[gameflag]));
 	SelectObject(hdc,hFontOld);
 	
 	hMemdc=CreateCompatibleDC(hdc);
