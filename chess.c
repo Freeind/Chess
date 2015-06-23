@@ -1139,7 +1139,7 @@ void doGame(int j,int i,int rb){
 				getMove(i,j);	//根据点击坐等置move
 			}
 			else
-				//判断点击位置算法存在路径
+				//判断点击位置是否存在路径
 				if(0<=i&&i<=9&&0<=j&&j<=8&&move[i][j]!=0)
 				{
 					setOldMap(R);	//保存棋盘以便悔棋操作

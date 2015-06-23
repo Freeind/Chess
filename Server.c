@@ -55,10 +55,10 @@ DWORD WINAPI threadClient0(LPVOID pM)
 	while(1){
 		memset(recvBuffer,0,BUFFSIZE);
 		count = recv(sockClient0,recvBuffer,BUFFSIZE,0);
-		if(count == -1)
+		if(count <= 0)
 		{
 			status = status^R;
-			//shutdown(sockClient0,SD_BOTH);
+			shutdown(sockClient0,SD_BOTH);
 			closesocket(sockClient0);
 			sockClient0 = 0;
 			sendStatus();
@@ -108,10 +108,10 @@ DWORD WINAPI threadClient1(LPVOID pM)
 	while(1){
 		memset(recvBuffer,0,BUFFSIZE);
 		count = recv(sockClient1,recvBuffer,BUFFSIZE,0);
-		if(count == -1)
+		if(count <= 0)
 		{
 			status = status^B;
-			//shutdown(sockClient1,SD_BOTH);
+			shutdown(sockClient1,SD_BOTH);
 			closesocket(sockClient1);
 			sockClient1 = 0;
 			sendStatus();

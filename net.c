@@ -5,7 +5,7 @@ DWORD WINAPI threadRead(LPVOID pM)
 	int count,time;
 	while(1){
 		count = recv(sockChess,recvBuffer,BUFFSIZE,0);
-		if(count == -1)
+		if(count <= 0)
 		{
 			shutdown(sockChess,SD_BOTH);
 			closesocket(sockChess);
@@ -143,7 +143,8 @@ BOOL initGameNet()
 		WSACleanup();
 		return FALSE;
 	}
-	ip="121.40.164.151";  	//服务器IP 
+//	ip="121.40.164.151";  	//服务器IP 
+	ip="127.0.0.1";
 	port=3000;				//端口 
 	memset(sendBuffer,0,BUFFSIZE);
 	memset(recvBuffer,0,BUFFSIZE);
@@ -251,5 +252,6 @@ void closeNet()
 {
 	TerminateThread(hThread,0);
 	CloseHandle(hThread);
+	shutdown(sockChess,SD_BOTH);
 	closesocket(sockChess);
 }
